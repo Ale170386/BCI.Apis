@@ -29,4 +29,10 @@
     <ProjectReference Include="..\BCI.Api.Data\BCI.Api.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="temp\doNotDelete.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

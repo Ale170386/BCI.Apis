@@ -22,10 +22,12 @@ namespace BCI.Apis
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
-            {
-                builder.WithOrigins("http://localhost:4200", "https://bcipilot.web.app").AllowAnyMethod().AllowAnyHeader();
-            }));
+            //services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            //{
+            //    builder.WithOrigins("http://40.87.62.201/", "http://40.87.62.201:80", "http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            //}));
+
+            services.AddCors();
 
             services.AddControllers();            
 
@@ -90,13 +92,18 @@ namespace BCI.Apis
             services.AddScoped<ITraceDAL, TraceDAL>();
             services.AddScoped<ITraceBL, TraceBL>();
             services.AddScoped<IActivationRequestDAL, ActivationRequestDAL>();
-            services.AddScoped<IActivationRequestBL, ActivationRequestBL>();            
+            services.AddScoped<IActivationRequestBL, ActivationRequestBL>();  
+            services.AddScoped<IFTP, FTP>();
+            services.AddScoped<ICredentials, Credentials>();
 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors("ApiCorsPolicy");
+            //app.UseCors("ApiCorsPolicy");
+            app.UseCors(
+                options => options.SetIsOriginAllowed(x => _ = true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            ); //This needs to set everything allowed
 
             // Configure the HTTP request pipeline.
 
