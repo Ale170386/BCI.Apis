@@ -49,7 +49,7 @@ namespace BCI.Api.Business.BusinessRequest
                 await activationRequestDAL.CreateCompanyProducts(companyProducts);
 
                 string result = this.RequestToCsvData(activationRequest, companyProducts);
-                string tempPath = $"{AppContext.BaseDirectory}temp\\{activationRequest.Id}.csv";
+                string tempPath = $"{AppContext.BaseDirectory}temp\\Leads_Pyme_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
 
                 File.WriteAllText(tempPath, result.ToString());
                 fTP.UploadFtpSingleFile(tempPath);
@@ -76,7 +76,7 @@ namespace BCI.Api.Business.BusinessRequest
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
+            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}{18}",
                         "fecha_Carga",
                         "RutEmpresa",
                         "DV",
@@ -84,8 +84,7 @@ namespace BCI.Api.Business.BusinessRequest
                         "RutApoderado",
                         "DV_Apod",
                         "NombreApoderado",
-                        "ApePatApod",
-                        "ApeMatApod",
+                        "ApellidoApod",                        
                         "TelefonoApoderado",
                         "EmailApoderado",
                         "Rubro",
@@ -100,16 +99,15 @@ namespace BCI.Api.Business.BusinessRequest
                         ));
 
 
-            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
+            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}{18}",
                         request.Created,
                         request.Client.CompanyRut.Remove(request.Client.CompanyRut.Length - 1),
-                        request.Client.CompanyRut[request.Client.CompanyRut.Length - 1],
+                        request.Client.CompanyRut[^1],
                         request.Client.CompanyName,
-                        "",//Rut Apoderado
-                        "",//DV Rut Apoderado
+                        request.Client.RutClient.Remove(request.Client.RutClient.Length - 1),
+                        request.Client.RutClient[^1],
                         request.Client.Name,
                         request.Client.LastName,
-                        "",//Apellido Materno
                         request.Client.Phone,
                         request.Client.Email,
                         request.Client.CompanyCategory,

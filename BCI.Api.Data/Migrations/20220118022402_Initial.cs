@@ -14,13 +14,14 @@ namespace BCI.Api.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyRut = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyCategory = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RutClient = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CompanyRut = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CompanyCategory = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     YearsOld = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -49,7 +50,7 @@ namespace BCI.Api.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +63,7 @@ namespace BCI.Api.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,9 +91,9 @@ namespace BCI.Api.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RegionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ComunaId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegionId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ComunaId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     SalesAmountId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -139,7 +140,7 @@ namespace BCI.Api.Data.Migrations
                 {
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {

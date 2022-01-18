@@ -11,7 +11,7 @@ namespace BCI.Api.Models
     public class Poll
     {
         public int Id { get; set; }
-        public int Stars { get; set; }
+        public int Stars { get; set; }        
         public string Opinion { get; set; } = string.Empty;
         public Guid RequestId { get; set; }
     }
