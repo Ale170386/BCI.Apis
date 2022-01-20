@@ -76,7 +76,7 @@ namespace BCI.Api.Business.BusinessRequest
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}{18}",
+            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
                         "fecha_Carga",
                         "RutEmpresa",
                         "DV",
@@ -94,12 +94,13 @@ namespace BCI.Api.Business.BusinessRequest
                         "Comuna",
                         "Direccion",
                         "CodigoInsignt",
-                        "fechaEnvio",
+                        "Otro",
+                        "fechaEnvio",      
                         Environment.NewLine
                         ));
 
 
-            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}{18}",
+            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
                         request.Created,
                         request.Client.CompanyRut.Remove(request.Client.CompanyRut.Length - 1),
                         request.Client.CompanyRut[^1],
@@ -116,7 +117,8 @@ namespace BCI.Api.Business.BusinessRequest
                         request.Company.RegionId,
                         request.Company.ComunaId,
                         request.Company.Address,
-                        String.Join("\"", companyProducts.Select(s => $"{s.ProductId}:{s.Description}").ToArray()),
+                        String.Join(";", companyProducts.Select(s => s.ProductId).ToArray()),
+                        companyProducts.Exists(e => e.Description != "") ? companyProducts.Where(w => w.Description != "").First().Description : "",
                         DateTime.Now,
                         Environment.NewLine
                         ));
