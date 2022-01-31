@@ -13,6 +13,7 @@ namespace BCI.Api.Business.Utilities
     {
         public AutoMapperProfiles()
         {
+            CreateMap<ProcessLogDTO, ProcessLog>();
             CreateMap<CreationProductDTO, Product>();
             CreateMap<CreactionCompanyDTO, Company>();
             CreateMap<CreationClientDTO, Client>();

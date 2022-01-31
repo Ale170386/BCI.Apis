@@ -28,6 +28,7 @@ namespace BCI.Api.Data
         public DbSet<CompanyProducts>  CompanyProducts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<SalesAmount> SalesAmount { get; set; }
+        public DbSet<ProcessLog> ProcessLog { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

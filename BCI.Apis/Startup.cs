@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BCI.Api.Business.BusinessTrace;
+using BCI.Api.Business.BusinessProcessLog;
+using BCI.Api.Data.DataProcessLog;
 
 namespace BCI.Apis
 {
@@ -95,6 +97,8 @@ namespace BCI.Apis
             services.AddScoped<IActivationRequestBL, ActivationRequestBL>();  
             services.AddScoped<IFTP, FTP>();
             services.AddScoped<ICredentials, Credentials>();
+            services.AddScoped<IProcessLogBL, ProcessLogBL>();
+            services.AddScoped<IProcessLogDAL, ProcessLogDAL>();
 
         }
 

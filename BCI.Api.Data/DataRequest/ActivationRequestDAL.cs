@@ -11,6 +11,7 @@ namespace BCI.Api.Data.DataRequest
     public class ActivationRequestDAL : IActivationRequestDAL
     {
         private readonly ApplicationDbContext applicationDbContext;
+        private readonly string processName = "CSV Process";
 
         public ActivationRequestDAL(ApplicationDbContext applicationDbContext)
         {
@@ -40,6 +41,18 @@ namespace BCI.Api.Data.DataRequest
             await applicationDbContext.SaveChangesAsync();
         }
 
+        public async Task<List<ActivationRequest>> GetAllActivationRequests()
+        {
+            try
+            {
+                return await applicationDbContext.ActivationRequest.Include(c => c.Client).Include(c => c.Company).Where(w => !w.Sent).ToListAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }            
+        }
+
         public async Task<List<Product>> GetAllProducts()
         {
             return await applicationDbContext.Products.ToListAsync();
@@ -49,5 +62,21 @@ namespace BCI.Api.Data.DataRequest
         {
             return await applicationDbContext.SalesAmount.ToListAsync();
         }
+
+        public async Task<List<CompanyProducts>> GetProductsByCompanyId(Guid companyId)
+        {
+            return await applicationDbContext.CompanyProducts.Where(w => w.CompanyId == companyId).ToListAsync();
+        }
+
+        public Task UpdateSentRequests(List<ActivationRequest> activationRequests)
+        {
+            activationRequests.Select(c => { c.Sent = true; return c; }).ToList();
+            
+            applicationDbContext.SaveChanges();
+
+            return Task.CompletedTask;
+        }
+
+        
     }
 }

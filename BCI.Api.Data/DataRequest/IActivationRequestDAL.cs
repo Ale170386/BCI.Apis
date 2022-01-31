@@ -14,5 +14,8 @@ namespace BCI.Api.Data.DataRequest
         public Task CreatePoll(Poll poll);
         public Task<List<Product>> GetAllProducts();
         public Task<List<SalesAmount>> GetAllSalesAmount();
+        public Task<List<ActivationRequest>> GetAllActivationRequests();
+        public Task<List<CompanyProducts>> GetProductsByCompanyId(Guid companyId);
+        public Task UpdateSentRequests(List<ActivationRequest> activationRequests);
     }
 }

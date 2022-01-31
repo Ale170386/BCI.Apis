@@ -16,5 +16,6 @@ namespace BCI.Api.Models
         public Company Company { get; set; } = new Company();
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
+        public bool Sent { get; set; }
     }
 }

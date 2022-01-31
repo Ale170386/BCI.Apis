@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using BCI.Api.Business.BusinessProcessLog;
 using BCI.Api.Business.Utilities;
+using BCI.Api.Data.DataProcessLog;
 using BCI.Api.Data.DataRequest;
 using BCI.Api.DTOs;
 using BCI.Api.Models;
@@ -46,13 +48,7 @@ namespace BCI.Api.Business.BusinessRequest
                                                             Description = product.Description
                                                         }).ToList();
 
-                await activationRequestDAL.CreateCompanyProducts(companyProducts);
-
-                string result = this.RequestToCsvData(activationRequest, companyProducts);
-                string tempPath = $"{AppContext.BaseDirectory}temp\\Leads_Pyme_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
-
-                File.WriteAllText(tempPath, result.ToString());
-                fTP.UploadFtpSingleFile(tempPath);
+                await activationRequestDAL.CreateCompanyProducts(companyProducts);                
             }
             catch (Exception ex)
             {
@@ -68,13 +64,8 @@ namespace BCI.Api.Business.BusinessRequest
         /// </summary>
         /// <param name="obj">object.</param>
         /// <returns>string.</returns>
-        private string RequestToCsvData(ActivationRequest request, List<CompanyProducts> companyProducts)
+        private async Task<string> RequestToCsvData(List<ActivationRequest> requestList)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException("obj", "Value can not be null or Nothing!");
-            }
-
             StringBuilder sb = new StringBuilder();
             sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
                         "fecha_Carga",
@@ -100,7 +91,11 @@ namespace BCI.Api.Business.BusinessRequest
                         ));
 
 
-            sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
+            foreach (ActivationRequest request in requestList)
+            {
+                List<CompanyProducts> products = await this.activationRequestDAL.GetProductsByCompanyId(request.Company.Id);
+
+                sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
                         request.Created,
                         request.Client.CompanyRut.Remove(request.Client.CompanyRut.Length - 1),
                         request.Client.CompanyRut[^1],
@@ -117,11 +112,12 @@ namespace BCI.Api.Business.BusinessRequest
                         request.Company.RegionId,
                         request.Company.ComunaId,
                         request.Company.Address,
-                        String.Join(";", companyProducts.Select(s => s.ProductId).ToArray()),
-                        companyProducts.Exists(e => e.Description != "") ? companyProducts.Where(w => w.Description != "").First().Description : "",
+                        String.Join(";", products.Select(s => s.ProductId).ToArray()),
+                        products.Exists(e => e.Description != "") ? products.Where(w => w.Description != "").First().Description : "",
                         DateTime.Now,
                         Environment.NewLine
                         ));
+            }
 
             return sb.ToString();
         }
@@ -153,6 +149,38 @@ namespace BCI.Api.Business.BusinessRequest
         {
             List<SalesAmount> salesAmounts = await activationRequestDAL.GetAllSalesAmount();
             return mapper.Map<List<SalesAmountDTO>>(salesAmounts);
+        }
+        public async Task<ResponseDTO> CreateRequestCSV()
+        {
+            ResponseDTO responseDTO = new ResponseDTO();
+            try
+            {
+                List<ActivationRequest> requestList = await this.activationRequestDAL.GetAllActivationRequests();
+
+                if (requestList.Count > 0)
+                {
+
+                    string result = await this.RequestToCsvData(requestList);
+                    string tempPath = $"{AppContext.BaseDirectory}temp\\Leads_Pyme_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
+
+                    File.WriteAllText(tempPath, result.ToString());
+                    fTP.UploadFtpSingleFile(tempPath);
+
+                    //Actualizar lista obtenida marcando el campo Sent como true
+                    await this.activationRequestDAL.UpdateSentRequests(requestList);
+                }
+                
+                responseDTO.Succeeded = true;
+                responseDTO.Message = $"Se generaron {requestList.Count} líneas en archivo csv";
+                
+            }
+            catch (Exception er)
+            {
+                responseDTO.Succeeded = true;
+                responseDTO.Message = $"Ocurrió un error en proceso de exportación de datos a CSV: { er.Message }";
+            }
+
+            return responseDTO;
         }
     }
 }

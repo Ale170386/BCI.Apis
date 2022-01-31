@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace BCI.Api.DTOs
 {
-    public class ResponseDTO
+    public class ProcessLogDTO
     {
-        public bool Succeeded { get; set; } = true;
-        public ErrorResponseDTO ErrorResponse { get; set; } = new ErrorResponseDTO();
+        public string Name { get; set; } = string.Empty;
+        public DateTime ProcessDate { get; set; }
+        public bool Error { get; set; } = false;
         public string Message { get; set; } = string.Empty;
     }
 }

@@ -62,6 +62,22 @@ namespace BCI.Apis.Controllers
             return await activationRequestBL.GetAllSalesAmount();
         }
 
+        [HttpPost("CreateCSV")]
+        public async Task<IActionResult> Post()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequestModelState();
+            }
+
+            var responseDTO = await activationRequestBL.CreateRequestCSV();
+
+            if (!responseDTO.Succeeded)
+                return NotFound(responseDTO);
+
+            return Ok(responseDTO);
+        }
+
         private IActionResult BadRequestModelState()
         {
             IEnumerable<string> errorMessages = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
