@@ -161,7 +161,7 @@ namespace BCI.Api.Business.BusinessRequest
                 {
 
                     string result = await this.RequestToCsvData(requestList);
-                    string tempPath = $"{AppContext.BaseDirectory}temp\\Leads_Pyme_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv";
+                    string tempPath = $"{AppContext.BaseDirectory}temp\\Leads_Pyme_{DateTime.Now.ToString("yyyyMMdd")}.csv";
 
                     File.WriteAllText(tempPath, result.ToString());
                     fTP.UploadFtpSingleFile(tempPath);
