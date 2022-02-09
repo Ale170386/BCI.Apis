@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -96,7 +97,7 @@ namespace BCI.Api.Business.BusinessRequest
                 List<CompanyProducts> products = await this.activationRequestDAL.GetProductsByCompanyId(request.Company.Id);
 
                 sb.Append(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}{19}",
-                        request.Created,
+                        request.Created.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                         request.Client.CompanyRut.Remove(request.Client.CompanyRut.Length - 1),
                         request.Client.CompanyRut[^1],
                         request.Client.CompanyName,
@@ -114,7 +115,7 @@ namespace BCI.Api.Business.BusinessRequest
                         request.Company.Address,
                         String.Join(";", products.Select(s => s.ProductId).ToArray()),
                         products.Exists(e => e.Description != "") ? products.Where(w => w.Description != "").First().Description : "",
-                        DateTime.Now,
+                        DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                         Environment.NewLine
                         ));
             }
